@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotional Navigator - Mental Health Chatbot</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Custom CSS for Visual Appeal and Professional Layout -->
+    <style>
+        /* Body background - neutral for a professional feel */
+        body {
+            background-color: #f0f4f8;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navigation bar styling */
+        .navbar {
+            background-color: #0b4c8d;
+        }
+
+        .navbar-brand, .nav-link {
+            color: white !important;
+            font-weight: bold;
+        }
+
+        .navbar-brand:hover, .nav-link:hover {
+            color:  #7d8a97ec !important;
+        }
+
+        /* Home section styling */
+        .home-section {
+            text-align: center;
+            padding: 100px 20px;
+            background-color: #ffffff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            margin: 50px auto;
+            max-width: 900px;
+        }
+
+        .home-section h1 {
+            font-size: 2.5rem;
+            color:  #0b4c8d;
+            margin-bottom: 20px;
+        }
+
+        .home-section p {
+            font-size: 1.2rem;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .home-section a {
+            background-color: #0b4c8dec;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .home-section a:hover {
+            background-color: #B9D1F0;
+        }
+
+        /* Chatbot container */
+        .container {
+            max-width: 850px;
+            margin: 50px auto;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* Chatbox header */
+        .header {
+            background-color: #0b4c8d;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* Chatbox styling */
+        #chatbox {
+            height: 450px;
+            padding: 30px;
+            background-color: #fafafa;
+            overflow-y: scroll;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Messages inside the chatbox */
+        .message {
+            max-width: 75%;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .user-message {
+            background-color:  #0b4c8dec;
+            align-self: flex-end;
+            text-align: right;
+            color: white;
+        }
+
+        .bot-message {
+            background-color: #B9D1F0;
+            color: #0b4c8d;
+        }
+
+        /* Input group for sending messages */
+        .input-group {
+            padding: 15px;
+            background-color: #f0f4f8;
+            border-top: 1px solid #ccc;
+        }
+
+        input#userInput {
+            border: none;
+            border-radius: 30px;
+            padding: 15px;
+            background-color: white;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.05);
+            flex-grow: 1;
+        }
+
+        button#sendBtn {
+            background-color: #0b4c8d;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 10px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        button#sendBtn:hover {
+            background-color:  #0b4c8dec;
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f0f4f8;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        /* Contact Section Styling */
+        .contact-section {
+            padding: 50px 20px;
+            background-color: #ffffff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            margin: 50px auto;
+            max-width: 900px;
+            display: none; /* Hide by default */
+        }
+
+        .contact-section h2 {
+            color: #0b4c8d ;
+            margin-bottom: 30px;
+            margin-top: 2rem; /* Add margin for spacing from top */
+        }
+
+        .contact-section .form-control {
+            border-radius: 30px;
+        }
+
+        /* Margin for Submit button */
+        .contact-section .btn {
+            margin-top: 4rem; /* Move the Submit button inward */
+        }
+    </style>
+
+<style>
+.resources-section {
+    padding: 50px 20px;
+    background-color: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    margin: 50px auto;
+    max-width: 900px;
+}
+
+.resources-section a {
+    color: #0b4c8d; /* Set link color */
+}
+
+.resources-section h2 {
+    color: #0b4c8d;
+    margin-bottom: 30px;
+    margin-top: 2rem; /* Add margin for spacing from top */
+}
+</style>
+</head>
+<body>
+
+    <!-- Navbar -->
+<nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="#">Emotional Navigator</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon" style="color: white;"><i class="fas fa-bars"></i></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#home-section">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#chatbox-section">Chatbox</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#resources-section" href="#resources-section">Resources</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#contact">Contact</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+    <!-- Home Section -->
+    <section id="home-section" class="home-section">
+        <h1>Welcome to Emotional Navigator - Navigate your emotions with ease. </h1>
+        <p>
+            This chatbot is designed to provide mental health support, helping you navigate through difficult emotions, stress, or anxiety. 
+            It's always here to listen and guide you through challenging moments. With our helpful resources and interactive chatbot, 
+            you can receive the support you need anytime, anywhere.
+        </p>
+        <a href="#" id="startChattingBtn">Start Chatting Now</a>
+    </section>
+
+    <!-- Chatbox Section -->
+    <section id="chatbox-section" class="container" style="display: none;">
+        
+        <!-- Chatbot header -->
+        <div class="header">
+            <i class="fas fa-comments"></i> Mental Health Chatbot
+        </div>
+
+        <!-- Chatbox section -->
+        <div id="chatbox">
+            <div class="message bot-message">
+                <strong>Bot:</strong> Hello! I'm here to help you with your mental health. How are you feeling today?
+            </div>
+        </div>
+
+        <!-- Input group for user interaction -->
+        <div class="input-group">
+            <input type="text" id="userInput" class="form-control" placeholder="Type your message...">
+            <div class="input-group-append">
+                <button class="btn" id="sendBtn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+   <!-- Contact Form Section -->
+<section id="contact" class="contact-section"  style="display: none;">
+    <div class="container">
+        <h2 class="text-center mb-5">Contact</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form action="https://formspree.io/f/movagooq" method="POST">
+                    <div class="form-group mb-4">
+                        <input type="email" name="email" class="form-control" placeholder="Enter Your Mail Id" required>
+                    </div>
+                    <div class="form-group mb-4">
+                        <textarea name="message" class="form-control" rows="5" placeholder="Enter Your Message Here" required></textarea>
+                    </div>
+                    <div class="text-center" style="margin-top: 2rem;"> <!-- Add margin-top for inward spacing -->
+                        <button type="submit" class="btn btn-dark btn-lg" style="margin-top: 2rem;" >
+                            <i class="fas fa-paper-plane"></i> Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+     <!-- Resources Section -->
+<section id="resources-section" class="resources-section container my-5" style="display: none;" >
+    <h2 class="text-center">Empower Your Mind: Resource Center</h2>
+    <p class="text-center text-muted">Access a wealth of knowledge with curated articles, guides, and tools designed to enhance your understanding and skills, all available at your fingertips. Explore insightful resources that empower you to make informed decisions and drive personal and professional growth.</p>
+
+    <!-- Featured Section -->
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <!-- Main Featured Article -->
+            <div class="card mb-4">
+                <img src="https://res.cloudinary.com/dbxk7xuzi/image/upload/v1727872892/mental-health_y50a8n.png" class="card-img-top" alt="Featured article image">
+                <div class="card-body">
+                    <span class="text-muted small">MENTAL HEALTH | BLOG</span>
+                    <h3 class="card-title">
+                        <a href="https://www.mentalhealth.gov/" target="_blank">MentalHealth.gov - Official resources for mental health</a>
+                    </h3>
+                    <p class="card-text">Comprehensive government resources to help individuals understand and manage their mental health.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Smaller Articles -->
+            <div class="media mb-4">
+                <img src="https://res.cloudinary.com/dbxk7xuzi/image/upload/v1727871759/main_bxv2zf.jpg" class="mr-3" alt="Article image">
+                <div class="media-body">
+                    <span class="text-muted small">NAMI | BLOG</span>
+                    <h5 class="mt-0">
+                        <a href="https://www.nami.org/Your-Journey/Individuals-with-Mental-Illness" target="_blank">NAMI - National Alliance on Mental Illness</a>
+                    </h5>
+                </div>
+            </div>
+
+            <div class="media mb-4">
+                <img src="https://res.cloudinary.com/dbxk7xuzi/image/upload/v1727871759/14_s2am1s.jpg" class="mr-3" alt="Article image">
+                <div class="media-body">
+                    <span class="text-muted small">PSYCH CENTRAL | BLOG</span>
+                    <h5 class="mt-0">
+                        <a href="https://psychcentral.com/" target="_blank">Psych Central - Comprehensive mental health resources</a>
+                    </h5>
+                </div>
+            </div>
+
+            <div class="media mb-4">
+                <img src="https://res.cloudinary.com/dbxk7xuzi/image/upload/v1727871759/12_syslgy.jpg" class="mr-3" alt="Article image">
+                <div class="media-body">
+                    <span class="text-muted small">VERYWELL MIND | BLOG</span>
+                    <h5 class="mt-0">
+                        <a href="https://www.verywellmind.com/" target="_blank">Verywell Mind - Tips for mental wellness and advice</a>
+                    </h5>
+                </div>
+            </div>
+
+            <div class="media mb-4">
+                <img src="https://res.cloudinary.com/dbxk7xuzi/image/upload/v1727871759/13_yuyc5w.jpg" class="mr-3" alt="Article image">
+                <div class="media-body">
+                    <span class="text-muted small">MIND | BLOG</span>
+                    <h5 class="mt-0">
+                        <a href="https://www.mind.org.uk/information-support/tips-for-everyday-living/" target="_blank">Mind - Tips for everyday mental health</a>
+                    </h5>
+                </div>
+            </div>
+
+            <div class="media mb-4">
+                <img src="https://res.cloudinary.com/dbxk7xuzi/image/upload/v1727872983/Screenshot_2024-10-02_170637_y86hfi.png" class="mr-3" alt="Article image">
+                <div class="media-body">
+                    <span class="text-muted small">PSYCHOLOGY TODAY | BLOG</span>
+                    <h5 class="mt-0">
+                        <a href="https://www.psychologytoday.com/us/basics/mental-health" target="_blank">Psychology Today - Articles on mental health topics</a>
+                    </h5>
+                </div>
+            </div>
+
+            <div class="media mb-4">
+                <img src="https://res.cloudinary.com/dbxk7xuzi/image/upload/v1727872984/Screenshot_2024-10-02_170444_hgkbxh.png" class="mr-3" alt="Article image">
+                <div class="media-body">
+                    <span class="text-muted small">APA | BLOG</span>
+                    <h5 class="mt-0">
+                        <a href="https://www.apa.org/topics/mental-health" target="_blank">American Psychological Association - Mental health information and articles</a>
+                    </h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Resources Section -->
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Resource Section</title>
+        <!-- Bootstrap CSS -->
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            .resources-section {
+                background-color: #f9f9f9;
+                padding: 40px;
+                border-radius: 8px;
+            }
+    
+            .resources-section h2 {
+                font-weight: 700;
+                margin-bottom: 20px;
+            }
+    
+            .resources-section .card {
+                border: none;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease;
+            }
+    
+            .resources-section .card:hover {
+                transform: translateY(-5px);
+            }
+    
+            .media-body h5 {
+                font-weight: 600;
+                font-size: 1rem;
+                margin-top: 5px;
+                line-height: 1.4;
+            }
+    
+            .media img {
+                width: 100px;
+                height: 100px;
+                object-fit: cover;
+                border-radius: 4px;
+            }
+    
+            .media {
+                align-items: flex-start;
+            }
+    
+            .text-muted {
+                color: #6c757d !important;
+            }
+        </style>
+    </head>
+    <body>
+    
+
+<!-- Bootstrap JS (optional for interactivity) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
+
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2024 Mental Health Chatbot. All rights reserved.</p>
+    </div>
+
+    <!-- JavaScript for Chatbot Functionality -->
+    <script>
+        // Get elements
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const chatbox = document.getElementById('chatbox');
+        const startChattingBtn = document.getElementById('startChattingBtn');
+        const homeSection = document.getElementById('home-section');
+        const chatboxSection = document.getElementById('chatbox-section');
+        const contactSection = document.getElementById('contact');
+
+        // Scroll to the bottom of the chatbox
+        const scrollToBottom = () => {
+            chatbox.scrollTop = chatbox.scrollHeight;
+        };
+
+        // Function to send message
+        const sendMessage = () => {
+            const message = userInput.value.trim();
+            if (message === '') return;
+
+            chatbox.innerHTML += `<div class="message user-message"><strong>You:</strong> ${message}</div>`;
+            userInput.value = '';
+
+            // Simulate bot response
+            setTimeout(() => {
+                chatbox.innerHTML += `<div class="message bot-message"><strong>Bot:</strong> I'm glad you're sharing. Let's talk through it together.</div>`;
+                scrollToBottom();
+            }, 1000);
+
+            scrollToBottom();  // Scroll to bottom after message
+        };
+
+        // Send message on 'Enter' key press
+        userInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                sendBtn.click();
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+        const sections = document.querySelectorAll("section"); // All sections
+        const navbarLinks = document.querySelectorAll(".navbar-nav a"); // All navigation links
+
+        navbarLinks.forEach(link => {
+            link.addEventListener("click", function(event) {
+                event.preventDefault(); // Prevent the default link behavior
+
+                const targetSection = document.querySelector(this.getAttribute("href")); // Get target section by href
+
+                // Hide all sections
+                sections.forEach(section => section.style.display = "none");
+
+                // Show the clicked section
+                targetSection.style.display = "block";
+            });
+        });
+
+        // Initially, only display the Home section
+        document.getElementById("home-section").style.display = "block";
+    });
+
+        // Show/hide sections based on navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(event) {
+                const target = event.target.getAttribute('href').substring(1);
+                if (target === 'home-section') {
+                    homeSection.style.display = 'block';
+                    chatboxSection.style.display = 'none';
+                    contactSection.style.display = 'none';
+                    resourcesSection.style.display = 'none';
+                } else if (target === 'chatbox-section') {
+                    homeSection.style.display = 'none';
+                    chatboxSection.style.display = 'block';
+                    contactSection.style.display = 'none';
+                    resourcesSection.style.display = 'none';
+                } else if (target === 'contact') {
+                    homeSection.style.display = 'none';
+                    chatboxSection.style.display = 'none';
+                    contactSection.style.display = 'block';
+                    resourcesSection.style.display = 'none';
+                } else if (target === 'resources-section') {
+                    homeSection.style.display = 'none';
+                    chatboxSection.style.display = 'none';
+                    contactSection.style.display = 'none';
+                    resourcesSection.style.display = 'block';
+                }
+                
+            });
+        });
+
+        // Add functionality to "Start Chatting Now" button
+        startChattingBtn.addEventListener('click', function(event) {
+            event.preventDefault();  // Prevent default link behavior
+            homeSection.style.display = 'none';
+            chatboxSection.style.display = 'block';  // Show chatbox section
+        });
+    </script>
+
+
+
+    <!-- Bootstrap and FontAwesome Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
